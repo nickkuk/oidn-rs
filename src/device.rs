@@ -39,6 +39,18 @@ impl Device {
             Err((err.try_into().unwrap(), msg))
         }
     }
+
+    /// Sets maximum number of threads which the device should use;
+    /// 0 (default value) will set it automatically to get the best performance.
+    pub fn set_num_threads(&mut self, num_threads: u32) {
+        unsafe { oidnSetDevice1i(self.0, b"numThreads\0" as *const _ as _, num_threads as i32) };
+    }
+
+    /// Binds software threads to hardware threads if set to true (improves performance);
+    /// false disables binding; default is true.
+    pub fn set_affinity(&mut self, affinity: bool) {
+        unsafe { oidnSetDevice1b(self.0, b"setAffinity\0" as *const _ as _, affinity) };
+    }
 }
 
 impl Drop for Device {
