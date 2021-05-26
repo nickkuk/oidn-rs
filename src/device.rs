@@ -20,10 +20,24 @@ impl Device {
         Self(handle)
     }
 
-    /// Create a device to run denoising on the CPU
+    /// Create a device to run denoising on the CPU; corresponds to Device::cpu_with_params(0, true)
     pub fn cpu() -> Self {
         let handle = unsafe { oidnNewDevice(OIDNDeviceType_OIDN_DEVICE_TYPE_CPU) };
         unsafe {
+            oidnCommitDevice(handle);
+        }
+        Self(handle)
+    }
+
+    /// Create a device to run denoising on the CPU with bounded number of threads and affinity;
+    /// max_threads = 0 will set it automatically to get the best performance;
+    /// affinity = true binds software threads to hardware threads which improves performance;
+    /// otherwise this binding is disabled
+    pub fn cpu_with_params(max_threads: u32, affinity: bool) -> Self {
+        let handle = unsafe { oidnNewDevice(OIDNDeviceType_OIDN_DEVICE_TYPE_CPU) };
+        unsafe {
+            oidnSetDevice1i(handle, b"numThreads\0" as *const _ as _, max_threads as i32);
+            oidnSetDevice1b(handle, b"setAffinity\0" as *const _ as _, affinity);
             oidnCommitDevice(handle);
         }
         Self(handle)
@@ -38,18 +52,6 @@ impl Device {
             let msg = unsafe { CStr::from_ptr(err_msg).to_string_lossy().to_string() };
             Err((err.try_into().unwrap(), msg))
         }
-    }
-
-    /// Sets maximum number of threads which the device should use;
-    /// 0 (default value) will set it automatically to get the best performance.
-    pub fn set_num_threads(&mut self, num_threads: u32) {
-        unsafe { oidnSetDevice1i(self.0, b"numThreads\0" as *const _ as _, num_threads as i32) };
-    }
-
-    /// Binds software threads to hardware threads if set to true (improves performance);
-    /// false disables binding; default is true.
-    pub fn set_affinity(&mut self, affinity: bool) {
-        unsafe { oidnSetDevice1b(self.0, b"setAffinity\0" as *const _ as _, affinity) };
     }
 }
 
