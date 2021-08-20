@@ -13,7 +13,7 @@ pub const OIDNError_OIDN_ERROR_UNSUPPORTED_HARDWARE: OIDNError = 5;
 pub const OIDNError_OIDN_ERROR_CANCELLED: OIDNError = 6;
 pub type OIDNError = ::std::os::raw::c_uint;
 pub type OIDNErrorFunction = ::std::option::Option<
-    unsafe extern "C" fn(
+    unsafe extern "system" fn(
         userPtr: *mut ::std::os::raw::c_void,
         code: OIDNError,
         message: *const ::std::os::raw::c_char,
@@ -25,48 +25,48 @@ pub struct OIDNDeviceImpl {
     _unused: [u8; 0],
 }
 pub type OIDNDevice = *mut OIDNDeviceImpl;
-extern "C" {
+extern "system" {
     pub fn oidnNewDevice(type_: OIDNDeviceType) -> OIDNDevice;
 }
-extern "C" {
+extern "system" {
     pub fn oidnRetainDevice(device: OIDNDevice);
 }
-extern "C" {
+extern "system" {
     pub fn oidnReleaseDevice(device: OIDNDevice);
 }
-extern "C" {
+extern "system" {
     pub fn oidnSetDevice1b(device: OIDNDevice, name: *const ::std::os::raw::c_char, value: bool);
 }
-extern "C" {
+extern "system" {
     pub fn oidnSetDevice1i(
         device: OIDNDevice,
         name: *const ::std::os::raw::c_char,
         value: ::std::os::raw::c_int,
     );
 }
-extern "C" {
+extern "system" {
     pub fn oidnGetDevice1b(device: OIDNDevice, name: *const ::std::os::raw::c_char) -> bool;
 }
-extern "C" {
+extern "system" {
     pub fn oidnGetDevice1i(
         device: OIDNDevice,
         name: *const ::std::os::raw::c_char,
     ) -> ::std::os::raw::c_int;
 }
-extern "C" {
+extern "system" {
     pub fn oidnSetDeviceErrorFunction(
         device: OIDNDevice,
         func: OIDNErrorFunction,
         userPtr: *mut ::std::os::raw::c_void,
     );
 }
-extern "C" {
+extern "system" {
     pub fn oidnGetDeviceError(
         device: OIDNDevice,
         outMessage: *mut *const ::std::os::raw::c_char,
     ) -> OIDNError;
 }
-extern "C" {
+extern "system" {
     pub fn oidnCommitDevice(device: OIDNDevice);
 }
 pub const OIDNFormat_OIDN_FORMAT_UNDEFINED: OIDNFormat = 0;
@@ -86,17 +86,17 @@ pub struct OIDNBufferImpl {
     _unused: [u8; 0],
 }
 pub type OIDNBuffer = *mut OIDNBufferImpl;
-extern "C" {
+extern "system" {
     pub fn oidnNewBuffer(device: OIDNDevice, byteSize: size_t) -> OIDNBuffer;
 }
-extern "C" {
+extern "system" {
     pub fn oidnNewSharedBuffer(
         device: OIDNDevice,
         ptr: *mut ::std::os::raw::c_void,
         byteSize: size_t,
     ) -> OIDNBuffer;
 }
-extern "C" {
+extern "system" {
     pub fn oidnMapBuffer(
         buffer: OIDNBuffer,
         access: OIDNAccess,
@@ -104,17 +104,17 @@ extern "C" {
         byteSize: size_t,
     ) -> *mut ::std::os::raw::c_void;
 }
-extern "C" {
+extern "system" {
     pub fn oidnUnmapBuffer(buffer: OIDNBuffer, mappedPtr: *mut ::std::os::raw::c_void);
 }
-extern "C" {
+extern "system" {
     pub fn oidnRetainBuffer(buffer: OIDNBuffer);
 }
-extern "C" {
+extern "system" {
     pub fn oidnReleaseBuffer(buffer: OIDNBuffer);
 }
 pub type OIDNProgressMonitorFunction = ::std::option::Option<
-    unsafe extern "C" fn(userPtr: *mut ::std::os::raw::c_void, n: f64) -> bool,
+    unsafe extern "system" fn(userPtr: *mut ::std::os::raw::c_void, n: f64) -> bool,
 >;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -122,16 +122,16 @@ pub struct OIDNFilterImpl {
     _unused: [u8; 0],
 }
 pub type OIDNFilter = *mut OIDNFilterImpl;
-extern "C" {
+extern "system" {
     pub fn oidnNewFilter(device: OIDNDevice, type_: *const ::std::os::raw::c_char) -> OIDNFilter;
 }
-extern "C" {
+extern "system" {
     pub fn oidnRetainFilter(filter: OIDNFilter);
 }
-extern "C" {
+extern "system" {
     pub fn oidnReleaseFilter(filter: OIDNFilter);
 }
-extern "C" {
+extern "system" {
     pub fn oidnSetFilterImage(
         filter: OIDNFilter,
         name: *const ::std::os::raw::c_char,
@@ -144,7 +144,7 @@ extern "C" {
         byteRowStride: size_t,
     );
 }
-extern "C" {
+extern "system" {
     pub fn oidnSetSharedFilterImage(
         filter: OIDNFilter,
         name: *const ::std::os::raw::c_char,
@@ -157,10 +157,10 @@ extern "C" {
         byteRowStride: size_t,
     );
 }
-extern "C" {
+extern "system" {
     pub fn oidnRemoveFilterImage(filter: OIDNFilter, name: *const ::std::os::raw::c_char);
 }
-extern "C" {
+extern "system" {
     pub fn oidnSetSharedFilterData(
         filter: OIDNFilter,
         name: *const ::std::os::raw::c_char,
@@ -168,47 +168,47 @@ extern "C" {
         byteSize: size_t,
     );
 }
-extern "C" {
+extern "system" {
     pub fn oidnUpdateFilterData(filter: OIDNFilter, name: *const ::std::os::raw::c_char);
 }
-extern "C" {
+extern "system" {
     pub fn oidnRemoveFilterData(filter: OIDNFilter, name: *const ::std::os::raw::c_char);
 }
-extern "C" {
+extern "system" {
     pub fn oidnSetFilter1b(filter: OIDNFilter, name: *const ::std::os::raw::c_char, value: bool);
 }
-extern "C" {
+extern "system" {
     pub fn oidnGetFilter1b(filter: OIDNFilter, name: *const ::std::os::raw::c_char) -> bool;
 }
-extern "C" {
+extern "system" {
     pub fn oidnSetFilter1i(
         filter: OIDNFilter,
         name: *const ::std::os::raw::c_char,
         value: ::std::os::raw::c_int,
     );
 }
-extern "C" {
+extern "system" {
     pub fn oidnGetFilter1i(
         filter: OIDNFilter,
         name: *const ::std::os::raw::c_char,
     ) -> ::std::os::raw::c_int;
 }
-extern "C" {
+extern "system" {
     pub fn oidnSetFilter1f(filter: OIDNFilter, name: *const ::std::os::raw::c_char, value: f32);
 }
-extern "C" {
+extern "system" {
     pub fn oidnGetFilter1f(filter: OIDNFilter, name: *const ::std::os::raw::c_char) -> f32;
 }
-extern "C" {
+extern "system" {
     pub fn oidnSetFilterProgressMonitorFunction(
         filter: OIDNFilter,
         func: OIDNProgressMonitorFunction,
         userPtr: *mut ::std::os::raw::c_void,
     );
 }
-extern "C" {
+extern "system" {
     pub fn oidnCommitFilter(filter: OIDNFilter);
 }
-extern "C" {
+extern "system" {
     pub fn oidnExecuteFilter(filter: OIDNFilter);
 }
